@@ -120,6 +120,9 @@ u8 backlight_time;
 u8 ste;
 u8 freq_mode_allowed;
 
+#seekto 0xe8c;
+u8 fm_region;
+
 #seekto 0xe90;
 struct {
   u8 keyM_longpress_action:7,
@@ -395,6 +398,8 @@ KEYACTIONS_LIST = ["None",
                    "Switch frequency/memory mode",
                    "Switch demodulation"
                    ]
+                   
+FM_REGION_LIST = ["76-108","87.5-108","88-108","87-108","76-95"]                   
 
 # the communication is obfuscated using this fine mechanism
 def xorarr(data: bytes):
@@ -1160,6 +1165,11 @@ class UVK5Radio(chirp_common.CloneModeRadio):
 
             if element.get_name() == "s9_level":
                 _mem.s9_level = -int(element.value)
+                
+            # FM region
+            if element.get_name() == "fm_region":
+                _mem.fm_region = FM_REGION_LIST.index(str(element.value))
+                
             # Alarm mode
             if element.get_name() == "alarm_mode":
                 _mem.alarm_mode = ALARMMODE_LIST.index(str(element.value))
@@ -1894,6 +1904,12 @@ class UVK5Radio(chirp_common.CloneModeRadio):
         tmpbtype = listDef(_mem.Battery_type, BATTYPE_LIST, 0)
         val = RadioSettingValueList(BATTYPE_LIST, BATTYPE_LIST[tmpbtype])
         batTypeSetting = RadioSetting("Battery_type", "Battery Type (BatTyp)", val)
+        
+        
+        # FM region
+        tmpregion = listDef(_mem.fm_region, FM_REGION_LIST, 0)
+        val = RadioSettingValueList(FM_REGION_LIST, FM_REGION_LIST[tmpregion])
+        FMRegionSetting = RadioSetting("fm_region", "FM Radio range", val)       
 
 ################## FM radio
 
@@ -2020,6 +2036,7 @@ class UVK5Radio(chirp_common.CloneModeRadio):
         extra.append(batTypeSetting)
         extra.append(s0LevelSetting)
         extra.append(s9LevelSetting)
+        extra.append(FMRegionSetting)
 
         return top
 
