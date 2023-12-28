@@ -427,6 +427,8 @@ MEM_BLOCK = 0x80  # largest block of memory that we can reliably write
 # fm radio supported frequencies
 FMMIN = 76.0
 FMMAX = 108.0
+# fm regions
+FM_REGION_LIST = ["76-108","87.5-108","88-108","87-108","76-95"]
 
 # bands supported by the UV-K5
 BANDS_STANDARD = {
@@ -1248,9 +1250,11 @@ class UVK5Radio(chirp_common.CloneModeRadio):
 
             if element.get_name() == "s9_level":
                 _mem.s9_level = -int(element.value)
+              
             # FM region
             if element.get_name() == "fm_region":
-                _mem.fm_region = FM_REGION_LIST.index(str(element.value))               
+                _mem.fm_region = FM_REGION_LIST.index(str(element.value))
+              
             # Alarm mode
             if element.get_name() == "alarm_mode":
                 _mem.alarm_mode = ALARMMODE_LIST.index(str(element.value))
