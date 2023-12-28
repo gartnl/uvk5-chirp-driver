@@ -121,7 +121,7 @@ u8 ste;
 u8 freq_mode_allowed;
 
 #seekto 0xe8c;
-u8 fm_region;                  
+u8 fm_region;              
 #seekto 0xe90;
 struct {
   u8 keyM_longpress_action:7,
@@ -428,7 +428,7 @@ MEM_BLOCK = 0x80  # largest block of memory that we can reliably write
 FMMIN = 76.0
 FMMAX = 108.0
 # fm regions
-FM_REGION_LIST = ["76-108","87.5-108","88-108","87-108","76-95"]
+FM_REGION_LIST = ["76-108","87.5-108","88-108","87-108","76-95"]            
 
 # bands supported by the UV-K5
 BANDS_STANDARD = {
@@ -798,7 +798,7 @@ class UVK5Radio(chirp_common.CloneModeRadio):
         rf.valid_name_length = 10
         rf.valid_power_levels = UVK5_POWER_LEVELS
         rf.valid_special_chans = self.Get_VFO_CHANNEL_NAMES()
-        rf.valid_duplexes = ["", "-", "+", "OFF"]
+        rf.valid_duplexes = ["", "-", "+", "off"]
 
         steps = STEPS.copy()
         steps.sort()
@@ -849,7 +849,7 @@ class UVK5Radio(chirp_common.CloneModeRadio):
     def validate_memory(self, mem):
         msgs = super().validate_memory(mem)
 
-        if mem.duplex == 'OFF':
+        if mem.duplex == 'off':
             return msgs
         
         # find tx frequency
@@ -1041,7 +1041,7 @@ class UVK5Radio(chirp_common.CloneModeRadio):
             if _mem.offsetDir == FLAGS1_OFFSET_MINUS:
                 if _mem.freq == _mem.offset:
                     # fake tx disable by setting tx to 0 MHz
-                    mem.duplex = 'OFF'
+                    mem.duplex = 'off'
                     mem.offset = 0
                 else:
                     mem.duplex = '-'
@@ -1254,7 +1254,6 @@ class UVK5Radio(chirp_common.CloneModeRadio):
             # FM region
             if element.get_name() == "fm_region":
                 _mem.fm_region = FM_REGION_LIST.index(str(element.value))
-              
             # Alarm mode
             if element.get_name() == "alarm_mode":
                 _mem.alarm_mode = ALARMMODE_LIST.index(str(element.value))
@@ -1978,7 +1977,7 @@ class UVK5Radio(chirp_common.CloneModeRadio):
         # FM region
         tmpregion = listDef(_mem.fm_region, FM_REGION_LIST, 0)
         val = RadioSettingValueList(FM_REGION_LIST, FM_REGION_LIST[tmpregion])
-        FMRegionSetting = RadioSetting("fm_region", "FM Radio range", val)                   
+        FMRegionSetting = RadioSetting("fm_region", "FM Radio range", val)                                   
 
 ################## FM radio
 
@@ -2105,8 +2104,7 @@ class UVK5Radio(chirp_common.CloneModeRadio):
         extra.append(batTypeSetting)
         extra.append(s0LevelSetting)
         extra.append(s9LevelSetting)
-        extra.append(FMRegionSetting)
-
+        extra.append(FMRegionSetting)                                     
         return top
 
     # Store details about a high-level memory to the memory map
@@ -2158,7 +2156,7 @@ class UVK5Radio(chirp_common.CloneModeRadio):
             _mem.offsetDir = FLAGS1_OFFSET_MINUS
         elif mem.duplex == '+':
             _mem.offsetDir = FLAGS1_OFFSET_PLUS
-        elif mem.duplex == 'OFF':
+        elif mem.duplex == 'off':
             # we fake tx disable by setting the tx freq to 0 MHz
             _mem.offsetDir = FLAGS1_OFFSET_MINUS
             _mem.offset = _mem.freq
