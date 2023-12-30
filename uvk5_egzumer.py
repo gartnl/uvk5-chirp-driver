@@ -121,7 +121,8 @@ u8 ste;
 u8 freq_mode_allowed;
 
 #seekto 0xe8c;
-u8 fm_region;              
+u8 fm_region;
+
 #seekto 0xe90;
 struct {
   u8 keyM_longpress_action:7,
